@@ -11,6 +11,8 @@ export type WholesaleBrand = {
   nxgAutoRemoteStarter?: boolean;
   /** Optional note displayed beneath the brand label in the table */
   note?: string;
+  /** When true, show a product category dropdown (Remote Starter vs Everything Else) */
+  hasCategories?: boolean;
 };
 
 export type RetailResult = {
@@ -46,16 +48,11 @@ export const PROVINCE_TAX: ProvinceTax = {
   Yukon: 5,
 };
 
-export const DISCOUNT_RATES = [5, 7.5, 10, 15, 20, 30];
+export const DISCOUNT_RATES = [5, 7.5, 10, 15, 20, 25, 30];
 
 export const WHOLESALE_BRANDS: WholesaleBrand[] = [
   { key: "jlAudio", label: "JL Audio", markup: 25, divisor: 0.75 },
-  {
-    key: "kenwoodExcelon",
-    label: "Kenwood Excelon",
-    markup: 25,
-    divisor: 0.75,
-  },
+  { key: "kenwoodExcelon", label: "Kenwood Excelon", markup: 25, divisor: 0.75 },
   {
     key: "sobel",
     label: "Sobel",
@@ -63,26 +60,12 @@ export const WHOLESALE_BRANDS: WholesaleBrand[] = [
     divisor: 0.85,
     note: "Fortin and iData products must be priced using Carrady or Importel dealer costs. Do not use Sobel pricing for these brands.",
   },
-  { key: "automobRockford", label: "Automob — Rockford Fosgate", markup: 18, divisor: 0.82 },
-  { key: "automobHertz", label: "Automob — Hertz", markup: 30, divisor: 0.70 },
-  { key: "automobOther", label: "Automob — All Others", markup: 15, divisor: 0.85 },
-  {
-    key: "carradyRemoteStarter",
-    label: "Carrady – Remote Starter (Fortin & iData)",
-    markup: 10,
-    divisor: 0.90,
-    nxgAutoRemoteStarter: true,
-  },
-  { key: "carradyEverythingElse", label: "Carrady – Everything Else", markup: 15, divisor: 0.85 },
-  {
-    key: "importelRemoteStarter",
-    label: "Importel – Remote Starter (Fortin & iData)",
-    markup: 10,
-    divisor: 0.90,
-    nxgAutoRemoteStarter: true,
-  },
-  { key: "importelEverythingElse", label: "Importel – Everything Else", markup: 15, divisor: 0.85 },
-  { key: "gemsen", label: "Gemsen", markup: 20, divisor: 0.8 },
+  { key: "automobRockford", label: "Automob – Rockford Fosgate", markup: 18, divisor: 0.82 },
+  { key: "automobHertz", label: "Automob – Hertz", markup: 30, divisor: 0.70 },
+  { key: "automobOther", label: "Automob – All Others", markup: 15, divisor: 0.85 },
+  { key: "carrady", label: "Carrady", markup: 15, divisor: 0.85, hasCategories: true },
+  { key: "importel", label: "Importel", markup: 15, divisor: 0.85, hasCategories: true },
+  { key: "gemsen", label: "Gemsen", markup: 20, divisor: 0.80 },
   { key: "gentec", label: "Gentec", markup: 15, divisor: 0.85 },
   { key: "focal", label: "Focal", markup: 25, divisor: 0.75 },
   { key: "pioneer", label: "Pioneer", markup: 20, divisor: 0.80 },

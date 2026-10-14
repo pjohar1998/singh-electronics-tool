@@ -8,10 +8,10 @@ import {
   PROVINCE_TAX,
   type TabId,
   toNum,
-  WHOLESALE_BRANDS,
 } from "./interface";
 import { Card, FieldLabel, NumberInput } from "./components";
 import { OrderAdjustCalculator } from "./OrderAdjustCalculator";
+import { WholesaleCalculator } from "./WholesaleCalculator";
 import { useCalculators } from "./useCalculators";
 
 export default function CalculatorsPage() {
@@ -56,10 +56,6 @@ export default function CalculatorsPage() {
     setMLogistics,
     mPlatform,
     setMPlatform,
-    wsCosts,
-    setWsCosts,
-    wsOtherDivisor,
-    setWsOtherDivisor,
   } = useCalculators();
 
   return (
@@ -560,216 +556,7 @@ export default function CalculatorsPage() {
 
         {activeTab === "wholesale" ? (
           <section>
-            {/* Warning Banner – Private Label / US Brands */}
-            <div className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3.5">
-              <p className="text-[13px] font-semibold text-red-700">
-                ⚠️ Singh Electronics Private Label Items
-              </p>
-              <p className="mt-1 text-[12.5px] leading-[1.6] text-red-600">
-                Pricing for Singh Electronics private label items (e.g. 0 gauge wire spools and similar products) must always be sourced directly from the Google Sheets or the Wholesale Distribution website — do not use this calculator for those items. The same applies to any US brands we carry (e.g. Skar Audio, CT Sounds, Deaf Bonce).
-              </p>
-            </div>
-
-            {/* Warning Banner – Fortin & iData Supplier Pricing Rule */}
-            <div className="mb-4 rounded-lg border border-amber-300 bg-amber-50 px-4 py-3.5">
-              <p className="text-[13px] font-semibold text-amber-800">
-                ⚠️ Fortin &amp; iData – Supplier Pricing Rule
-              </p>
-              <p className="mt-1 text-[12.5px] leading-[1.6] text-amber-700">
-                For all Fortin and iData brand products, wholesale pricing must be based on dealer costs obtained from the <span className="font-semibold">Carrady or Importel websites</span>.
-              </p>
-              <p className="mt-1.5 text-[12.5px] font-semibold leading-[1.6] text-amber-800">
-                Do NOT use Sobel&apos;s dealer pricing for Fortin or iData products, even when these products are available through Sobel.
-              </p>
-              <p className="mt-1 text-[12.5px] leading-[1.6] text-amber-700">
-                For remote starter products, use the dedicated <span className="font-semibold">Carrady or Importel Remote Starter category</span> with the 0.90 divisor.
-              </p>
-            </div>
-
-            {/* Instructions Note */}
-            <div className="mb-4 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3.5">
-              <p className="text-[12.5px] leading-[1.6] text-zinc-600">
-                Use the <span className="font-semibold text-zinc-800">Other</span> row to calculate wholesale pricing for any brand not listed above. Adjust the divisor based on your target margin — for example, a divisor of <span className="font-mono font-semibold">0.80</span> gives a 20% margin, and <span className="font-mono font-semibold">0.70</span> gives a 30% margin. If you are unsure which divisor to use, please check with management before proceeding.
-              </p>
-            </div>
-
-            <Card title="Wholesale Pricing Sheet">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[720px] border-collapse text-[13px]">
-                  <thead>
-                    <tr className="border-b-2 border-zinc-200">
-                      <th className="px-3.5 py-2.5 text-left text-[10.5px] font-bold tracking-[0.08em] uppercase text-zinc-400">
-                        Brand Name
-                      </th>
-                      <th className="px-3.5 py-2.5 text-right text-[10.5px] font-bold tracking-[0.08em] uppercase text-zinc-400">
-                        Divisor
-                      </th>
-                      <th className="px-3.5 py-2.5 text-left text-[10.5px] font-bold tracking-[0.08em] uppercase text-zinc-400">
-                        Dealer Cost
-                      </th>
-                      <th className="px-3.5 py-2.5 text-right text-[10.5px] font-bold tracking-[0.08em] uppercase text-zinc-400">
-                        Wholesale Price
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {WHOLESALE_BRANDS.map((brand) => {
-                      const cost = toNum(wsCosts[brand.key] ?? "");
-                      const divisor =
-                        brand.key === "other"
-                          ? Number.parseFloat(wsOtherDivisor)
-                          : brand.divisor;
-                      const validDivisor =
-                        Number.isFinite(divisor) &&
-                        (divisor as number) > 0 &&
-                        (divisor as number) < 1;
-                      const standardPrice =
-                        cost > 0 && validDivisor
-                          ? cost / (divisor as number)
-                          : null;
-                      // NXG Auto special price: standard price × 0.95 (5% off the unrounded standard price)
-                      const nxgPrice =
-                        brand.nxgAutoRemoteStarter && cost > 0 && validDivisor
-                          ? (cost / (divisor as number)) * 0.95
-                          : null;
-
-                      return (
-                        <tr
-                          key={brand.key}
-                          className="border-b border-zinc-100 hover:bg-zinc-50"
-                        >
-                          {/* Brand Name cell – may contain a sub-note */}
-                          <td className="px-3.5 py-2.5 text-left">
-                            <span className="block text-[13px] font-bold text-zinc-900 whitespace-nowrap">
-                              {brand.label}
-                            </span>
-                            {brand.note ? (
-                              <span className="mt-0.5 block max-w-[260px] whitespace-normal text-[11px] leading-[1.5] text-amber-600">
-                                ⚠️ {brand.note}
-                              </span>
-                            ) : null}
-                          </td>
-
-                          {/* Divisor cell */}
-                          <td className="px-3.5 py-2.5 text-right align-top">
-                            {brand.key === "other" ? (
-                              <div className="ml-auto flex max-w-[100px] overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 focus-within:border-zinc-900">
-                                <input
-                                  type="number"
-                                  value={wsOtherDivisor}
-                                  onChange={(e) =>
-                                    setWsOtherDivisor(e.target.value)
-                                  }
-                                  min={0.01}
-                                  max={0.99}
-                                  step={0.01}
-                                  placeholder="0.85"
-                                  className="w-full bg-transparent px-2 py-1.5 text-right font-mono text-[13px] outline-none"
-                                />
-                              </div>
-                            ) : (
-                              <span className="inline-block rounded-md bg-zinc-100 px-2.5 py-1 font-mono text-[13px] font-semibold text-zinc-500">
-                                {brand.divisor?.toFixed(2)}
-                              </span>
-                            )}
-                          </td>
-
-                          {/* Dealer Cost input cell */}
-                          <td className="w-[160px] px-3.5 py-2.5 align-top">
-                            <div className="flex overflow-hidden rounded-lg border border-zinc-200 bg-zinc-50 focus-within:border-zinc-900">
-                              <span className="flex items-center border-r border-zinc-200 bg-zinc-100 px-2 text-[13px] text-zinc-400">
-                                $
-                              </span>
-                              <input
-                                type="number"
-                                value={wsCosts[brand.key] ?? ""}
-                                onChange={(e) =>
-                                  setWsCosts((prev) => ({
-                                    ...prev,
-                                    [brand.key]: e.target.value,
-                                  }))
-                                }
-                                min={0}
-                                step="any"
-                                placeholder="0.00"
-                                className="w-full bg-transparent px-2.5 py-2 font-mono text-[13px] outline-none"
-                              />
-                            </div>
-                          </td>
-
-                          {/* Wholesale Price cell – dual prices for NXG Auto Remote Starter rows */}
-                          <td className="px-3.5 py-2.5 text-right align-top">
-                            {brand.nxgAutoRemoteStarter ? (
-                              <div className="space-y-1.5">
-                                {/* Standard Wholesale Price */}
-                                <div>
-                                  <div className="text-[10px] font-semibold uppercase tracking-[0.07em] text-zinc-400">
-                                    Standard (All Dealers)
-                                  </div>
-                                  <div
-                                    className={[
-                                      "font-mono text-[15px] font-bold whitespace-nowrap",
-                                      standardPrice !== null
-                                        ? "text-emerald-500"
-                                        : "text-zinc-300",
-                                    ].join(" ")}
-                                  >
-                                    {fmtCAD(standardPrice)}
-                                  </div>
-                                </div>
-                                {/* NXG Auto Special Price */}
-                                <div className="rounded-md border border-violet-200 bg-violet-50 px-2.5 py-1.5">
-                                  <div className="text-[10px] font-semibold uppercase tracking-[0.07em] text-violet-500">
-                                    NXG Auto Only (−5%)
-                                  </div>
-                                  <div
-                                    className={[
-                                      "font-mono text-[15px] font-bold whitespace-nowrap",
-                                      nxgPrice !== null
-                                        ? "text-violet-600"
-                                        : "text-violet-300",
-                                    ].join(" ")}
-                                  >
-                                    {fmtCAD(nxgPrice)}
-                                  </div>
-                                </div>
-                              </div>
-                            ) : (
-                              <span
-                                className={[
-                                  "font-mono text-[15px] font-bold whitespace-nowrap",
-                                  standardPrice !== null
-                                    ? "text-emerald-500"
-                                    : "text-zinc-400",
-                                ].join(" ")}
-                              >
-                                {fmtCAD(standardPrice)}
-                              </span>
-                            )}
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* NXG Auto Authorization Notice */}
-              <div className="mt-5 rounded-lg border border-violet-300 bg-violet-50 px-4 py-3.5">
-                <p className="text-[13px] font-bold text-violet-800">
-                  🔒 NXG Auto – Exclusive Dealer Discount
-                </p>
-                <p className="mt-1.5 text-[12.5px] leading-[1.6] text-violet-700">
-                  NXG Auto is currently the <span className="font-bold">ONLY authorized dealer</span> eligible for an additional 5% discount on Fortin and iData remote starter wholesale pricing.
-                </p>
-                <p className="mt-1 text-[12.5px] leading-[1.6] text-violet-700">
-                  All other dealers must be quoted the <span className="font-semibold">standard wholesale price</span> calculated using the 0.90 divisor (10% gross margin).
-                </p>
-                <p className="mt-1.5 text-[12.5px] font-bold leading-[1.6] text-violet-900">
-                  Do not offer the NXG Auto discounted price to any other dealer without explicit management authorization.
-                </p>
-              </div>
-            </Card>
+            <WholesaleCalculator />
           </section>
         ) : null}
       </div>
