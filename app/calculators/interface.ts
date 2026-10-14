@@ -7,6 +7,10 @@ export type WholesaleBrand = {
   label: string;
   markup: number | null;
   divisor: number | null;
+  /** When true, this row displays both standard wholesale price AND NXG Auto special price (5% off standard) */
+  nxgAutoRemoteStarter?: boolean;
+  /** Optional note displayed beneath the brand label in the table */
+  note?: string;
 };
 
 export type RetailResult = {
@@ -52,16 +56,37 @@ export const WHOLESALE_BRANDS: WholesaleBrand[] = [
     markup: 25,
     divisor: 0.75,
   },
-  { key: "sobel", label: "Sobel", markup: 15, divisor: 0.85 },
+  {
+    key: "sobel",
+    label: "Sobel",
+    markup: 15,
+    divisor: 0.85,
+    note: "Fortin and iData products must be priced using Carrady or Importel dealer costs. Do not use Sobel pricing for these brands.",
+  },
   { key: "automobRockford", label: "Automob — Rockford Fosgate", markup: 18, divisor: 0.82 },
   { key: "automobHertz", label: "Automob — Hertz", markup: 30, divisor: 0.70 },
   { key: "automobOther", label: "Automob — All Others", markup: 15, divisor: 0.85 },
-  { key: "carrady", label: "Carrady", markup: 15, divisor: 0.85 },
-  { key: "importel", label: "Importel", markup: 15, divisor: 0.85 },
+  {
+    key: "carradyRemoteStarter",
+    label: "Carrady – Remote Starter (Fortin & iData)",
+    markup: 10,
+    divisor: 0.90,
+    nxgAutoRemoteStarter: true,
+  },
+  { key: "carradyEverythingElse", label: "Carrady – Everything Else", markup: 15, divisor: 0.85 },
+  {
+    key: "importelRemoteStarter",
+    label: "Importel – Remote Starter (Fortin & iData)",
+    markup: 10,
+    divisor: 0.90,
+    nxgAutoRemoteStarter: true,
+  },
+  { key: "importelEverythingElse", label: "Importel – Everything Else", markup: 15, divisor: 0.85 },
   { key: "gemsen", label: "Gemsen", markup: 20, divisor: 0.8 },
   { key: "gentec", label: "Gentec", markup: 15, divisor: 0.85 },
   { key: "focal", label: "Focal", markup: 25, divisor: 0.75 },
   { key: "pioneer", label: "Pioneer", markup: 20, divisor: 0.80 },
+  { key: "eriksonConsumer", label: "Erikson Consumer", markup: 15, divisor: 0.85 },
   { key: "other", label: "Other", markup: null, divisor: null },
 ];
 
