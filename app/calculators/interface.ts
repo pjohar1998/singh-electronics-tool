@@ -46,7 +46,7 @@ export const PROVINCE_TAX: ProvinceTax = {
   Yukon: 5,
 };
 
-export const DISCOUNT_RATES = [5, 7.5, 10];
+export const DISCOUNT_RATES = [5, 7.5, 10, 15, 20, 30];
 
 export const WHOLESALE_BRANDS: WholesaleBrand[] = [
   { key: "jlAudio", label: "JL Audio", markup: 25, divisor: 0.75 },

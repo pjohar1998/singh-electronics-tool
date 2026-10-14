@@ -341,14 +341,14 @@ export default function CalculatorsPage() {
             </Card>
 
             <Card title="Discount Scenarios">
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[760px] border-collapse text-[13px]">
+              <div>
+                <table className="w-full border-collapse text-[13px]">
                   <thead>
                     <tr className="border-b-2 border-zinc-200">
                       {[
-                        "Discount",
+                        "Disc.",
                         "Disc. Subtotal",
-                        "New Grand Total",
+                        "Grand Total",
                         "Platform Fee",
                         "Total Cost",
                         "Profit",
@@ -357,7 +357,7 @@ export default function CalculatorsPage() {
                         <th
                           key={col}
                           className={[
-                            "px-3 py-2 text-right text-[10.5px] font-bold tracking-[0.07em] uppercase whitespace-nowrap text-zinc-400",
+                            "px-2 py-2 text-right text-[10.5px] font-bold tracking-[0.07em] uppercase whitespace-nowrap text-zinc-400",
                             i === 0 ? "text-left" : "",
                           ].join(" ")}
                         >
@@ -374,24 +374,24 @@ export default function CalculatorsPage() {
                           key={s.disc}
                           className="border-b border-zinc-100 hover:bg-zinc-50"
                         >
-                          <td className="px-3 py-2.5 text-left font-sans font-bold text-zinc-900">
+                          <td className="px-2 py-2.5 text-left font-sans font-bold text-zinc-900">
                             {s.disc}%
                           </td>
-                          <td className="px-3 py-2.5 text-right font-mono">
+                          <td className="px-2 py-2.5 text-right font-mono">
                             {fmtCAD(s.discSubtotal)}
                           </td>
-                          <td className="px-3 py-2.5 text-right font-mono">
+                          <td className="px-2 py-2.5 text-right font-mono">
                             {fmtCAD(s.newGrandTotal)}
                           </td>
-                          <td className="px-3 py-2.5 text-right font-mono">
+                          <td className="px-2 py-2.5 text-right font-mono">
                             {fmtCAD(s.pfAmt)}
                           </td>
-                          <td className="px-3 py-2.5 text-right font-mono">
+                          <td className="px-2 py-2.5 text-right font-mono">
                             {fmtCAD(s.totalCost)}
                           </td>
                           <td
                             className={[
-                              "px-3 py-2.5 text-right font-mono font-bold",
+                              "px-2 py-2.5 text-right font-mono font-bold",
                               s.profit < 0
                                 ? "text-red-500"
                                 : "text-emerald-500",
@@ -399,7 +399,7 @@ export default function CalculatorsPage() {
                           >
                             {fmtCAD(s.profit)}
                           </td>
-                          <td className="px-3 py-2.5 text-right font-mono">
+                          <td className="px-2 py-2.5 text-right font-mono">
                             <span
                               className={[
                                 "inline-block rounded-full px-2 py-0.5 text-xs font-bold",
